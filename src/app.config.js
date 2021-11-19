@@ -47,12 +47,6 @@ export default {
       "selectedIconPath": './static/images/home@selected.png',
       "text": "首页"
     },
-    {
-      "pagePath": "pages/catalog/catalog",
-      "iconPath": './static/images/category.png',
-      "selectedIconPath": './static/images/category@selected.png',
-      "text": "分类"
-    },
      {
       "pagePath": "pages/cart/cart",
       "iconPath": './static/images/cart.png',

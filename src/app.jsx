@@ -7,7 +7,7 @@ import dva from './dva';
 import models from './models';
 import * as user from './utils/user';
 import * as app from './utils/app';
-import {set as setGlobalData, get as getGlobalData} from './global_data';
+import {set as setGlobalData} from './global_data';
 
 import './app.less'
 

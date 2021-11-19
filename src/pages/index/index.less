@@ -419,6 +419,7 @@
   overflow: hidden;
   height: 264px;
   width: 456px;
+  position: absolute;
 }
 
 .a-popular .b .name {
@@ -435,14 +436,26 @@
   color: #999;
   line-height: 50px;
   font-size: 25px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 
 .a-popular .b .price {
-  width: 456px;
-  display: block;
+  width: 300px;
+  display: inline-block;
   color: #ab956d;
   line-height: 50px;
   font-size: 33px;
+}
+
+.a-popular .b .cart{
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
 
 /** 专题 **/

@@ -3,15 +3,16 @@
 // var WxApiRoot = 'http://localhost:8082/wx/';
 // 云平台部署时使用
 var WxApiRoot = 'https://shop.andmedia.cn/wx/';
+var WxApiRoot1 = 'http://127.0.0.1:8080/api/'
 
 export default {
-  IndexUrl: WxApiRoot + 'home/index', //首页数据接口
+  IndexUrl: WxApiRoot1 + 'goods', //首页数据接口
   AboutUrl: WxApiRoot + 'home/about', //介绍信息
 
   CatalogList: WxApiRoot + 'catalog/index', //分类目录全部分类数据接口
   CatalogCurrent: WxApiRoot + 'catalog/current', //分类目录当前分类数据接口
 
-  AuthLoginByWeixin: WxApiRoot + 'auth/login_by_weixin', //微信登录
+  AuthLoginByWeixin: WxApiRoot + '/user/login', //微信登录
   AuthLoginByAccount: WxApiRoot + 'auth/login', //账号登录
   AuthLogout: WxApiRoot + 'auth/logout', //账号登出
   AuthRegister: WxApiRoot + 'auth/register', //账号注册
@@ -28,8 +29,8 @@ export default {
   BrandList: WxApiRoot + 'brand/list', //品牌列表
   BrandDetail: WxApiRoot + 'brand/detail', //品牌详情
 
-  CartList: WxApiRoot + 'cart/index', //获取购物车的数据
-  CartAdd: WxApiRoot + 'cart/add', // 添加商品到购物车
+  CartList: WxApiRoot1 + 'carts', //获取购物车的数据
+  CartAdd: WxApiRoot1 + 'carts', // 添加商品到购物车
   CartFastAdd: WxApiRoot + 'cart/fastadd', // 立即购买商品
   CartUpdate: WxApiRoot + 'cart/update', // 更新购物车的商品
   CartDelete: WxApiRoot + 'cart/delete', // 删除购物车的商品
