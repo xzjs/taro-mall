@@ -40,8 +40,7 @@ export default {
     // },
     *getIndex(_, {call, put}) {
       const res = yield call(getIndex);
-      // console.log('--home--', res);
-      yield put({type: 'save', payload: res});
+      yield put({type: 'save', payload: res.data});
     }
   }
 };

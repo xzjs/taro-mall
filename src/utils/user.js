@@ -50,9 +50,7 @@ export function loginByWeixin(userInfo) {
         userInfo: userInfo
       }).then(loginRes => {
          //存储用户信息
-         Taro.setStorageSync('userInfo', loginRes.userInfo);
-         Taro.setStorageSync('token', loginRes.token);
-
+         Taro.setStorageSync('ytmy', loginRes.header["Set-Cookie"]);
          resolve(loginRes);
       }).catch(err => {
         reject(err);

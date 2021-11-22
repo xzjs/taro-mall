@@ -12,11 +12,11 @@ function request(url, data = {}, method = "GET") {
       method: method,
       header: {
         "Content-Type": "application/json",
-        "X-Litemall-Token": Taro.getStorageSync("token"),
+        'Cookie': Taro.getStorageSync('ytmy'),
       },
       success: function (res) {
         if (res.statusCode == 200) {
-          resolve(res.data);
+          resolve(res);
         } else if(res.statusCode==401){
           Taro.navigateTo({
             url: "/pages/auth/login/login",

@@ -52,6 +52,10 @@ class Index extends PureComponent {
     Taro.stopPullDownRefresh(); //停止下拉刷新
   }
 
+  componentDidShow=()=>{
+    this.getData();
+  }
+
   componentWillMount() {
     // 页面初始化 options为页面跳转所带来的参数
     let { scene, grouponId, goodId, orderId } = this.$instance.router.params;

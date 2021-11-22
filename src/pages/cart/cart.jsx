@@ -47,7 +47,7 @@ class Cart extends Component {
   getCartList = () => {
     getCartListApi().then((res) => {
       this.setState({
-        cartGoods: res,
+        cartGoods: res.data,
       });
 
       this.setState({
