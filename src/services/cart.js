@@ -54,8 +54,8 @@ export async function orderPrepay(payload) {
  * 购物车修改
  * @param {*} payload
  */
-export async function cartUpdate(payload) {
-  return request.post(Api.CartUpdate, payload)
+export async function cartUpdate(id,payload) {
+  return request.put(Api.CartUpdate+id, payload)
 }
 
 /**

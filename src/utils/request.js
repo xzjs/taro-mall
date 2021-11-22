@@ -41,4 +41,8 @@ request.post = (url, data) => {
   return request(url, data, "POST");
 };
 
+request.put = (url,data)=>{
+  return request(url,data,"PUT");
+};
+
 export default request;

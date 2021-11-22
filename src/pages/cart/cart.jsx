@@ -1,7 +1,16 @@
 import React, { Component } from "react";
 import Taro from "@tarojs/taro";
-import { View, Text, Button, Image, Input, Block,Checkbox } from "@tarojs/components";
-import { AtCheckbox } from "taro-ui";
+import {
+  View,
+  Text,
+  Button,
+  Image,
+  Input,
+  Block,
+  Checkbox,
+  CheckboxGroup,
+} from "@tarojs/components";
+import { AtInputNumber } from "taro-ui";
 import { get as getGlobalData } from "../../global_data";
 import {
   cartUpdate,
@@ -12,12 +21,11 @@ import {
 import { TabBar } from "../../components";
 
 import "./index.less";
-import "taro-ui/dist/style/components/checkbox.scss";
-import "taro-ui/dist/style/components/icon.scss";
 
 class Cart extends Component {
   state = {
     cartGoods: [],
+    total: 0,
     cartTotal: {
       goodsCount: 0,
       goodsAmount: 0.0,
@@ -27,7 +35,6 @@ class Cart extends Component {
     isEditCart: false,
     checkedAllStatus: true,
     editCartList: [],
-    hasLogin: false,
   };
 
   onPullDownRefresh() {
@@ -37,6 +44,7 @@ class Cart extends Component {
     Taro.stopPullDownRefresh(); //停止下拉刷新
   }
 
+  componentDidUpdate() {}
   componentWillMount() {}
   componentDidMount() {}
   componentWillUnmount() {}
@@ -48,10 +56,7 @@ class Cart extends Component {
     getCartListApi().then((res) => {
       this.setState({
         cartGoods: res.data,
-      });
-
-      this.setState({
-        checkedAllStatus: this.isCheckedAll(),
+        total: 0,
       });
     });
   };
@@ -267,19 +272,33 @@ class Cart extends Component {
     }
   };
 
-  getCheckedGoodsCount = () => {
-    let checkedGoodsCount = 0;
-    this.state.cartGoods.forEach(function (v) {
-      if (v.checked === true) {
-        checkedGoodsCount += v.number;
+  getCheckedGoodsTotal = () => {};
+
+  onCheckBoxChange = (e) => {
+    let total = 0;
+    this.state.cartGoods.forEach((item) => {
+      if (e.detail.value.indexOf(item.ID.toString()) != -1) {
+        total += item.good.price * item.num;
       }
     });
-    console.log(checkedGoodsCount);
-    return checkedGoodsCount;
+    this.setState({
+      total: total,
+    });
+  };
+
+  onNumChange = (id, value) => {
+    cartUpdate(id, { num: value }).then(() => {
+      const goods = [...this.state.cartGoods];
+      this.setState({
+        cartGoods: goods.map((item) =>
+          item.ID == id ? { ...item, num: value } : item
+        ),
+      });
+    });
   };
 
   render() {
-    const { isEditCart, cartGoods, cartTotal, checkedAllStatus } = this.state;
+    const { isEditCart, cartGoods, total, checkedAllStatus } = this.state;
     return (
       <Block>
         <View className="bar-container container">
@@ -296,85 +315,90 @@ class Cart extends Component {
                 <View className="list">
                   <View className="group-item">
                     <View className="goods">
-                      {cartGoods.map((item, index) => {
-                        return (
-                          <View
-                            className={`item ${isEditCart ? "edit" : ""}`}
-                            key="id"
-                          >
-                            <Checkbox class="checkbox"></Checkbox>
-                            <View className="cart-goods">
-                              <Image
-                                className="img"
-                                src={item.good.img}
-                              ></Image>
-                              <View className="info">
-                                <View className="t">
-                                  <Text className="name">{item.good.name}</Text>
-                                  <Text className="num">x{item.num}</Text>
-                                </View>
-                                <View className="attr">
-                                  {isEditCart ? "已选择:" : ""}
-                                  {item.specifications || ""}
-                                </View>
-                                <View className="b">
-                                  <Text className="price">
-                                    ￥{item.good.price}
-                                  </Text>
-                                  <View className="selnum">
-                                    <View
-                                      className="cut"
-                                      onClick={this.cutNumber}
-                                      data-item-index={index}
-                                    >
-                                      -
-                                    </View>
-                                    <Input
+                      <CheckboxGroup
+                        className="checkboxgroup"
+                        onChange={this.onCheckBoxChange}
+                      >
+                        {cartGoods.map((item, index) => {
+                          return (
+                            <View
+                              className={`item ${isEditCart ? "edit" : ""}`}
+                              key="id"
+                            >
+                              <Checkbox
+                                className="checkbox"
+                                value={item.ID}
+                              ></Checkbox>
+
+                              <View className="cart-goods">
+                                <Image
+                                  className="img"
+                                  src={item.good.img}
+                                ></Image>
+                                <View className="info">
+                                  <View className="t">
+                                    <Text className="name">
+                                      {item.good.name}
+                                    </Text>
+                                    <AtInputNumber
+                                      min={1}
+                                      max={1000}
+                                      step={1}
                                       value={item.num}
-                                      className="number"
-                                      disabled="true"
-                                      type="number"
+                                      onChange={(value) => {
+                                        this.onNumChange(item.ID, value);
+                                      }}
                                     />
-                                    <View
-                                      className="add"
-                                      onClick={this.addNumber}
-                                      data-item-index={index}
-                                    >
-                                      +
+                                  </View>
+                                  <View className="attr">
+                                    {isEditCart ? "已选择:" : ""}
+                                    {item.specifications || ""}
+                                  </View>
+                                  <View className="b">
+                                    <Text className="price">
+                                      ￥{item.good.price}
+                                    </Text>
+                                    <View className="selnum">
+                                      <View
+                                        className="cut"
+                                        onClick={this.cutNumber}
+                                        data-item-index={index}
+                                      >
+                                        -
+                                      </View>
+                                      <Input
+                                        value={item.num}
+                                        className="number"
+                                        disabled="true"
+                                        type="number"
+                                      />
+                                      <View
+                                        className="add"
+                                        onClick={this.addNumber}
+                                        data-item-index={index}
+                                      >
+                                        +
+                                      </View>
                                     </View>
                                   </View>
                                 </View>
                               </View>
                             </View>
-                          </View>
-                        );
-                      })}
+                          );
+                        })}
+                      </CheckboxGroup>
                     </View>
                   </View>
                 </View>
                 <View className="cart-bottom">
                   {/* <van-checkbox value='{ checkedAllStatus }' bind:change='checkedAll'>全选（{cartTotal.checkedGoodsCount}）</van-checkbox> */}
                   <View className="total">
-                    {!isEditCart ? "￥" + cartTotal.checkedGoodsAmount : ""}
+                    {!isEditCart ? "￥" + total : ""}
                   </View>
                   <View class="action_btn_area">
-                    <View
-                      className={!isEditCart ? "edit" : "sure"}
-                      onClick={this.editCart}
-                    >
-                      {!isEditCart ? "编辑" : "完成"}
+                    <View className="checkout" onClick={this.checkoutOrder}>
+                      下单
                     </View>
-
-                    {isEditCart && (
-                      <View className="delete" onClick={this.deleteCart}>
-                        删除({cartTotal.checkedGoodsCount})
-                      </View>
-                    )}
-                    {!isEditCart && (
-                      <View className="checkout" onClick={this.checkoutOrder}>
-                        下单
-                      </View>
-                    )}
                   </View>
                 </View>
               </View>
