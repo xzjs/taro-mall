@@ -66,7 +66,7 @@ class Index extends Component {
     });
     orderSubmit(order)
       .then(() => {
-        Taro.switchTab({url:'/pages/ucenter/index/index'})
+        Taro.switchTab({url:'/pages/ucenter/order/order'})
       })
       .catch((err) => {
         Taro.showToast({ title: err });

@@ -53,10 +53,10 @@ export default {
       "selectedIconPath": './static/images/cart@selected.png',
       "text": "购物车"
     }, {
-      "pagePath": 'pages/ucenter/index/index',
+      "pagePath": 'pages/ucenter/order/order',
       "iconPath": './static/images/my.png',
       "selectedIconPath": './static/images/my@selected.png',
-      "text": "个人"
+      "text": "订单"
     }
   ]
   },

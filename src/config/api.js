@@ -65,7 +65,7 @@ export default {
 
   OrderSubmit: WxApiRoot1 + 'orders', // 提交订单
   OrderPrepay: WxApiRoot + 'order/prepay', // 订单的预支付会话
-  OrderList: WxApiRoot + 'order/list', //订单列表
+  OrderList: WxApiRoot1 + 'orders', //订单列表
   OrderDetail: WxApiRoot + 'order/detail', //订单详情
   OrderCancel: WxApiRoot + 'order/cancel', //取消订单
   OrderRefund: WxApiRoot + 'order/refund', //退款取消订单
