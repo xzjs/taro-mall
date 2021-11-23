@@ -26,15 +26,7 @@ class Cart extends Component {
   state = {
     cartGoods: [],
     total: 0,
-    cartTotal: {
-      goodsCount: 0,
-      goodsAmount: 0.0,
-      checkedGoodsCount: 0,
-      checkedGoodsAmount: 0.0,
-    },
-    isEditCart: false,
-    checkedAllStatus: true,
-    editCartList: [],
+    checkedList: [],
   };
 
   onPullDownRefresh() {
@@ -108,192 +100,48 @@ class Cart extends Component {
     });
   };
 
-  isCheckedAll = () => {
-    //判断购物车商品已全选
-    return this.state.cartGoods.every(function (element, index, array) {
-      if (element.checked == true) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-  };
-
-  doCheckedAll = () => {
-    // let checkedAll = this.isCheckedAll()
-    this.setState({
-      checkedAllStatus: this.isCheckedAll(),
-    });
-  };
-
-  cutNumber = (event) => {
-    let itemIndex = event.target.dataset.itemIndex;
-    let cartItem = this.state.cartGoods[itemIndex];
-    let number = cartItem.number - 1 > 1 ? cartItem.number - 1 : 1;
-    cartItem.number = number;
-    this.setState(
-      {
-        cartGoods: this.state.cartGoods,
-      },
-      () => {
-        this.updateCart(
-          cartItem.productId,
-          cartItem.goodsId,
-          number,
-          cartItem.id
-        );
-      }
-    );
-  };
-
-  addNumber = (event) => {
-    console.log("this.state", this.state);
-    let itemIndex = event.target.dataset.itemIndex;
-    let cartItem = this.state.cartGoods[itemIndex];
-    let number = cartItem.number + 1;
-    cartItem.number = number;
-    this.setState(
-      {
-        cartGoods: this.state.cartGoods,
-      },
-      () => {
-        this.updateCart(
-          cartItem.productId,
-          cartItem.goodsId,
-          number,
-          cartItem.id
-        );
-      }
-    );
-  };
-
-  updateCart = (productId, goodsId, number, id) => {
-    cartUpdate({
-      productId: productId,
-      goodsId: goodsId,
-      number: number,
-      id: id,
-    }).then(() => {
-      this.setState({
-        checkedAllStatus: this.isCheckedAll(),
-      });
-    });
-  };
-
   checkoutOrder = () => {
-    //获取已选择的商品
-
-    var checkedGoods = this.state.cartGoods.filter(function (
-      element,
-      index,
-      array
-    ) {
-      if (element.checked == true) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    if (checkedGoods.length <= 0) {
-      return false;
-    }
-
     // storage中设置了cartId，则是购物车购买
     try {
-      Taro.setStorageSync("cartId", 0);
+      Taro.setStorageSync("carts", JSON.stringify(this.state.checkedList));
       Taro.navigateTo({
         url: "/pages/checkout/checkout",
       });
     } catch (e) {}
   };
 
-  editCart = () => {
-    if (this.state.isEditCart) {
-      this.getCartList();
-      this.setState({
-        isEditCart: !this.state.isEditCart,
-      });
-    } else {
-      //编辑状态
-      let tmpCartList = this.state.cartGoods.map(function (v) {
-        v.checked = false;
-        return v;
-      });
-      this.setState({
-        editCartList: this.state.cartGoods,
-        cartGoods: tmpCartList,
-        isEditCart: !this.state.isEditCart,
-        checkedAllStatus: this.isCheckedAll(),
-        "cartTotal.checkedGoodsCount": this.getCheckedGoodsCount(),
-      });
-    }
-  };
-
-  checkedItem = (event) => {
-    console.log(event);
-    let itemIndex = event.target.dataset.itemIndex;
-
-    let productIds = [];
-    productIds.push(this.state.cartGoods[itemIndex].productId);
-    if (!this.state.isEditCart) {
-      cartChecked({
-        productIds: productIds,
-        isChecked: this.state.cartGoods[itemIndex].checked ? 0 : 1,
-      }).then((res) => {
-        this.setState({
-          cartGoods: res.cartList,
-          cartTotal: res.cartTotal,
-        });
-
-        this.setState({
-          checkedAllStatus: this.isCheckedAll(),
-        });
-      });
-    } else {
-      //编辑状态
-      let tmpCartData = this.state.cartGoods.map(function (
-        element,
-        index,
-        array
-      ) {
-        if (index == itemIndex) {
-          element.checked = !element.checked;
-        }
-
-        return element;
-      });
-
-      this.setState({
-        cartGoods: tmpCartData,
-        checkedAllStatus: this.isCheckedAll(),
-        "cartTotal.checkedGoodsCount": this.getCheckedGoodsCount(),
-      });
-    }
-  };
-
-  getCheckedGoodsTotal = () => {};
-
   onCheckBoxChange = (e) => {
-    let total = 0;
-    this.state.cartGoods.forEach((item) => {
-      if (e.detail.value.indexOf(item.ID.toString()) != -1) {
-        total += item.good.price * item.num;
-      }
-    });
-    this.setState({
-      total: total,
-    });
+    this.setState(
+      {
+        checkedList: e.detail.value,
+      },
+      this.getTotal
+    );
   };
 
   onNumChange = (id, value) => {
     cartUpdate(id, { num: value }).then(() => {
       const goods = [...this.state.cartGoods];
-      this.setState({
-        cartGoods: goods.map((item) =>
-          item.ID == id ? { ...item, num: value } : item
-        ),
-      });
+      this.setState(
+        {
+          cartGoods: goods.map((item) =>
+            item.ID == id ? { ...item, num: value } : item
+          ),
+        },
+        this.getTotal
+      );
+    });
+  };
+
+  getTotal = () => {
+    let total = 0;
+    this.state.cartGoods.forEach((item) => {
+      if (this.state.checkedList.indexOf(item.ID.toString()) != -1) {
+        total += item.good.price * item.num;
+      }
+    });
+    this.setState({
+      total: total,
     });
   };
 

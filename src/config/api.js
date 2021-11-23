@@ -63,7 +63,7 @@ export default {
 
   RegionList: WxApiRoot + 'region/list', //获取区域列表
 
-  OrderSubmit: WxApiRoot + 'order/submit', // 提交订单
+  OrderSubmit: WxApiRoot1 + 'orders', // 提交订单
   OrderPrepay: WxApiRoot + 'order/prepay', // 订单的预支付会话
   OrderList: WxApiRoot + 'order/list', //订单列表
   OrderDetail: WxApiRoot + 'order/detail', //订单详情
