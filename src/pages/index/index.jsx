@@ -28,6 +28,7 @@ import {
 
 import "./index.less";
 import { addCart } from "../../services/cart";
+import { baseURL } from "../../utils/img";
 
 @connect(({ home, goods, config }) => ({
   data: home.data,
@@ -52,9 +53,9 @@ class Index extends PureComponent {
     Taro.stopPullDownRefresh(); //停止下拉刷新
   }
 
-  componentDidShow=()=>{
+  componentDidShow = () => {
     this.getData();
-  }
+  };
 
   componentWillMount() {
     // 页面初始化 options为页面跳转所带来的参数
@@ -158,7 +159,7 @@ class Index extends PureComponent {
                 {data.map((item) => {
                   return (
                     <View className="item" key={item.ID}>
-                      <Image className="img" src={item.img}></Image>
+                      <Image className="img" src={baseURL + item.img}></Image>
                       <View className="right">
                         <View className="text">
                           <Text className="name">{item.name}</Text>

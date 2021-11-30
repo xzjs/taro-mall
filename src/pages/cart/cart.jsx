@@ -3,7 +3,6 @@ import Taro from "@tarojs/taro";
 import {
   View,
   Text,
-  Button,
   Image,
   Input,
   Block,
@@ -11,14 +10,12 @@ import {
   CheckboxGroup,
 } from "@tarojs/components";
 import { AtInputNumber } from "taro-ui";
-import { get as getGlobalData } from "../../global_data";
 import {
   cartUpdate,
   cartDelete,
-  cartChecked,
   getCartListApi,
 } from "../../services/cart";
-import { TabBar } from "../../components";
+import { baseURL } from "../../utils/img";
 
 import "./index.less";
 
@@ -181,7 +178,7 @@ class Cart extends Component {
                               <View className="cart-goods">
                                 <Image
                                   className="img"
-                                  src={item.good.img}
+                                  src={baseURL + item.good.img}
                                 ></Image>
                                 <View className="info">
                                   <View className="t">
