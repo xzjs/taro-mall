@@ -3,7 +3,7 @@
 // var WxApiRoot = 'http://localhost:8082/wx/';
 // 云平台部署时使用
 var WxApiRoot = 'https://shop.andmedia.cn/wx/';
-var WxApiRoot1 = 'http://127.0.0.1:8080/api/'
+var WxApiRoot1 = 'http://yongtaimaoyi.com/api/'
 
 export default {
   IndexUrl: WxApiRoot1 + 'goods', //首页数据接口
