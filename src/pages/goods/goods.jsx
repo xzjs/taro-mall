@@ -246,26 +246,6 @@ class Goods extends Component {
       url: this.state.shareImage,
       success: function(res) {
         console.log(res)
-        Taro.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
-          success: function() {
-            Taro.showModal({
-              title: '存图成功',
-              content: '图片成功保存到相册了，可以分享到朋友圈了',
-              showCancel: false,
-              confirmText: '好的',
-              confirmColor: '#a78845',
-              success: function(res1) {
-                if (res1.confirm) {
-                  console.log('用户点击确定');
-                }
-              }
-            })
-          },
-          fail: function() {
-            console.log('fail')
-          }
-        })
       },
       fail: function() {
         console.log('fail')
